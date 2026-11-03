@@ -1,0 +1,102 @@
+<ion-app>
+  <ion-content>
+    @if (vista() === 'login') {
+      <main class="login-layout">
+        <section class="acceso">
+          <div class="marca">UBER</div>
+
+          <form #formulario="ngForm" (ngSubmit)="ingresar()">
+            <h1>Inicia sesión</h1>
+
+            <p class="descripcion">
+              Ingresa tu correo o teléfono para continuar.
+            </p>
+
+            <ion-input
+              label="Correo o teléfono"
+              labelPlacement="stacked"
+              fill="outline"
+              placeholder="Ingresa tu correo o teléfono"
+              name="login"
+              autocomplete="username"
+              [(ngModel)]="login"
+              required
+            ></ion-input>
+
+            <ion-input
+              label="Contraseña"
+              labelPlacement="stacked"
+              fill="outline"
+              placeholder="Ingresa tu contraseña"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              [(ngModel)]="password"
+              required
+            ></ion-input>
+
+            <ion-button
+              expand="block"
+              type="submit"
+              [disabled]="formulario.invalid || !login.trim() || cargando()"
+            >
+              {{ cargando() ? 'Ingresando...' : 'Continuar →' }}
+            </ion-button>
+
+            @if (mensaje()) {
+              <p class="mensaje" role="status">{{ mensaje() }}</p>
+            }
+          </form>
+
+          <div class="demo-accesos">
+            <p>Probar perfiles · Demostración sin conexión</p>
+
+            <button
+              type="button"
+              [disabled]="cargando()"
+              (click)="abrirDemo('admin')"
+            >
+              Administrador
+            </button>
+
+            <button
+              type="button"
+              [disabled]="cargando()"
+              (click)="abrirDemo('driver')"
+            >
+              Conductor
+            </button>
+          </div>
+        </section>
+      </main>
+    } @else {
+      <main class="panel-demo">
+        <header class="cabecera-demo">
+          <strong>UBER</strong>
+
+          <button type="button" (click)="vista.set('login')">
+            Volver al login
+          </button>
+        </header>
+
+        <p class="aviso-demo">
+          {{ vista() === 'client'
+            ? 'Las solicitudes de viaje se envían al servidor.'
+            : 'Modo demostración: datos ficticios. Los cambios no se guardan ni se comparten entre perfiles.' }}
+        </p>
+
+        @switch (vista()) {
+          @case ('admin') {
+            <app-administrador></app-administrador>
+          }
+          @case ('driver') {
+            <app-conductor></app-conductor>
+          }
+          @case ('client') {
+            <app-cliente></app-cliente>
+          }
+        }
+      </main>
+    }
+  </ion-content>
+</ion-app>
